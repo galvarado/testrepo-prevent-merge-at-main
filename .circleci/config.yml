@@ -44,6 +44,7 @@ jobs:
         - image:  cimg/python:3.8.4
 
     steps:
+        - checkout
         - print:
             message: "running integration tests"
 
@@ -56,6 +57,7 @@ jobs:
         - image:  cimg/python:3.8.4
 
     steps:
+        - checkout
         - print:
             message: "running acceptance tests"
 
@@ -71,7 +73,7 @@ workflows:
           - build-and-push-image:
               filters:
                 tags:
-                  only: /^staging$/
+                  only: /^staging$/check
                 # Exclude commits on all branches
                 branches:
                   ignore: /.*/
@@ -84,7 +86,7 @@ workflows:
                 # Exclude commits on all branches
                 branches:
                   ignore: /.*/
-          - deploy-to-staging:
+          - deploy-to-staging:check
               requires:
                 - build-and-push-image
               filters:
@@ -93,7 +95,7 @@ workflows:
                 # Exclude commits on all branches
                 branches:
                   ignore: /.*/
-          - integration-tests:
+          - integration-tests:check
               requires:
                 - deploy-test-env
               filters:
