@@ -1,5 +1,3 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
 commands:
@@ -16,7 +14,8 @@ commands:
 jobs:
   build-and-push-image:
     docker:
-        - image: circleci/ruby:2.4
+        - image:  cimg/python:3.8.4
+
     steps:
         - print:
             message: "build and push"
@@ -24,32 +23,46 @@ jobs:
 
   deploy-test-env:
     docker:
-        - image: circleci/ruby:2.4
+        - image:  cimg/python:3.8.4
+
     steps:
         - print:
             message: "deploying test env"
 
   deploy-to-staging:
     docker:
-        - image: circleci/ruby:2.4
+        - image:  cimg/python:3.8.4
+
     steps:
         - print:
             message: "deploying staging env"
 
   integration-tests:
     docker:
-        - image: circleci/ruby:2.4
+        - image:  cimg/python:3.8.4
+
     steps:
+        - checkout
         - print:
             message: "running integration tests"
 
+        - run:
+              name: Run integration tests
+              command: |
+                  bash ./.circleci/scripts/integration_test.sh
   acceptance-tests:
     docker:
-        - image: circleci/ruby:2.4
+        - image:  cimg/python:3.8.4
+
     steps:
+        - checkout
         - print:
             message: "running acceptance tests"
-  
+
+        - run:
+              name: Run integration tests
+              command: |
+                  bash ./.circleci/scripts/acceptance_test.sh  
 
 workflows:
   version: 2.1
