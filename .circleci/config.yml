@@ -71,7 +71,7 @@ workflows:
           - build-and-push-image:
               filters:
                 tags:
-                  only: /^staging$/check
+                  only: /^staging$/
                 # Exclude commits on all branches
                 branches:
                   ignore: /.*/
