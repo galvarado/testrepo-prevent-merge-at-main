@@ -86,7 +86,7 @@ workflows:
                 # Exclude commits on all branches
                 branches:
                   ignore: /.*/
-          - deploy-to-staging:check
+          - deploy-to-staging:
               requires:
                 - build-and-push-image
               filters:
