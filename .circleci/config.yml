@@ -11,19 +11,62 @@ commands:
     steps:
       - run:
           name: Print a message
-          command: echo << parameters.message >> 
+          command: echo Hello << parameters.message >> 
 
 jobs:
-    one:
-      docker:
-          - image: circleci/ruby:2.4
-      steps:
-          - print:
-              message: "one"
-    
+  build-image:
+    docker:
+        - image: circleci/ruby:2.4
+    steps:
+        - print:
+            message: "one"
+  
 
 workflows:
-    version: 2.1
-    build:
-        jobs:
-            - one
+  version: 2.1
+  deploy-staging:
+      jobs:
+          - build-and-push-image:
+              filters:
+                tags:
+                  only: /^staging$/
+                # Exclude commits on all branches
+                branches:
+                  ignore: /.*/
+          - deploy-test-env:
+              requires:
+                - build-and-push-image
+              filters:
+                tags:
+                  only: /^staging$/
+                # Exclude commits on all branches
+                branches:
+                  ignore: /.*/
+          - deploy-to-staging:
+              requires:
+                - build-and-push-image
+              filters:
+                tags:
+                  only: /^staging$/
+                # Exclude commits on all branches
+                branches:
+                  ignore: /.*/
+          - integration-tests:
+              requires:
+                - deploy-test-env
+              filters:
+                tags:
+                  only: /^staging$/
+                # Exclude commits on all branches
+                branches:
+                  ignore: /.*/
+          - acceptance-tests:
+              requires:
+                - deploy-to-staging
+              filters:
+                tags:
+                  only: /^staging$/
+                # Exclude commits on all branches
+                branches:
+                  ignore: /.*/
+          
