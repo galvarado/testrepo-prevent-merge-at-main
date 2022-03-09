@@ -14,12 +14,41 @@ commands:
           command: echo Hello << parameters.message >> 
 
 jobs:
-  build-image:
+  build-and-push-image:
     docker:
         - image: circleci/ruby:2.4
     steps:
         - print:
-            message: "one"
+            message: "build and push"
+
+
+  deploy-test-env:
+    docker:
+        - image: circleci/ruby:2.4
+    steps:
+        - print:
+            message: "deploying test env"
+
+  deploy-to-staging:
+    docker:
+        - image: circleci/ruby:2.4
+    steps:
+        - print:
+            message: "deploying staging env"
+
+  integration-tests:
+    docker:
+        - image: circleci/ruby:2.4
+    steps:
+        - print:
+            message: "running integration tests"
+
+  acceptance-tests:
+    docker:
+        - image: circleci/ruby:2.4
+    steps:
+        - print:
+            message: "running acceptance tests"
   
 
 workflows:
