@@ -1,5 +1,10 @@
 version: 2.1
 
+executors:
+  nodejs-executor:
+    docker:
+      - image: circleci/node:14.4.0
+
 commands:
   print:
     description: "A simple echo"
